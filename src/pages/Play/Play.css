@@ -1,0 +1,154 @@
+/* No z-index, opacity or animation on the root: its layers must stack against the
+   app-level glow (ModeGlow.css), content above it and the base colour below. */
+.play {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--background-base);
+  /* Vertical pans scroll natively; horizontal drags are handled as Play/Train swipes */
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.play img {
+  -webkit-user-drag: none;
+}
+
+/* ---------- Scrolling content: title + ways in ---------- */
+.play__scroll {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.play__content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* Clear the tab bar: its bottom padding (App.css) + 62px bar (TabBar.css) + 12px top padding + 16px */
+  padding: 160px 16px calc(max(20px, env(safe-area-inset-bottom)) + 62px + 12px + 16px);
+  animation: play-fade-in 400ms ease-in-out both;
+}
+
+@keyframes play-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.play__title {
+  margin: 0;
+  line-height: 1.3; /* Figma: 26px, which keeps the cards on their design positions */
+  color: var(--color-text-default);
+  animation: play-fade-in 400ms ease-in-out both;
+}
+
+/* ---------- Way-in card ---------- */
+.play__way {
+  position: relative;
+  flex-shrink: 0;
+  height: 182px;
+  overflow: hidden;
+  border-radius: 32px;
+}
+
+.play__way-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* Figma: "Scroll Edge Effect · card bottom", 135px tall */
+.play__way-blur {
+  --scroll-edge-blur-scale: 2;
+
+  top: auto;
+  height: 135px;
+}
+
+.play__way-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: rgba(9, 12, 22, 0.55);
+}
+
+.play__way-icon {
+  position: absolute;
+  display: block;
+}
+
+/* Figma: the golfer glyph sits inside a 22px icon frame at 9px, inset 4.94% / 22.96% */
+.play__way-icon--course {
+  top: 10px;
+  left: 14px;
+}
+
+.play__way-icon--rainmaker {
+  top: 9px;
+  left: 9px;
+}
+
+.play__way-text {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: calc(100% - 36px);
+}
+
+/* Figma: 18px Geist Medium on the Title 4 line height (no matching DS text style) */
+.play__way-title {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: var(--font-weight-medium);
+  line-height: var(--text-title-4-line-height);
+  letter-spacing: -0.01em;
+  color: var(--color-text-default);
+}
+
+.play__way-detail {
+  color: rgba(228, 231, 242, 0.85);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.play__way-chevron {
+  position: absolute;
+  right: 18px;
+  bottom: 30px;
+  display: block;
+}
+
+/* ---------- Header: scroll-edge blur + mode control ---------- */
+.play__header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  height: 120px;
+  pointer-events: none;
+}
+
+/* The header ignores pointer events so swipes pass through; the control opts back in */
+.play__modes {
+  position: absolute;
+  top: 81px;
+  left: 16px;
+  right: 16px;
+  pointer-events: auto;
+}

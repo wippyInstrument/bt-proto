@@ -1,0 +1,65 @@
+/*
+ * Stacked above page content (2), page headers (3) and the glow (1), below the
+ * tab bar (5, App.css), which stays sharp and tappable over the scrim.
+ */
+
+/* Figma: "Overlay · long-press scrim" (Background Blur/Medium) */
+.mode-menu__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: var(--color-bg-overlay);
+  backdrop-filter: blur(16px);
+}
+
+/* Figma: "Menu · Play shortcuts", 16px above the bar and centred on the Play tab.
+   The bar is a centred 344px wide, so the Play tab's centre sits 40.5px right of the screen's.
+   Doubled class so `position` wins over .ds-glass's. */
+.mode-menu.ds-glass {
+  position: absolute;
+  left: calc(50% + 40.5px);
+  bottom: calc(max(20px, env(safe-area-inset-bottom)) + 62px + 16px);
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  width: 152px;
+  margin-left: -76px;
+  padding: 10px 16px;
+  border-radius: 32px;
+  transform-origin: 50% 100%;
+}
+
+.mode-menu__item {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  width: 100%;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--color-text-default);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 120ms ease;
+}
+
+.mode-menu__item--hovered {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.mode-menu__item img {
+  display: block;
+  flex-shrink: 0;
+}
+
+.mode-menu__item:focus-visible {
+  outline: 2px solid var(--color-text-link);
+  outline-offset: -2px;
+}
+
+.mode-menu__label {
+  font-feature-settings: "lnum" 1, "pnum" 1;
+}

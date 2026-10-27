@@ -4,21 +4,49 @@
   height: 100%;
   overflow: hidden;
   background: var(--background-base);
+  /* Vertical pans scroll natively; horizontal drags are handled as Play/Train swipes */
+  touch-action: pan-y;
+  user-select: none;
 }
 
-/* ---------- Course image + fade to base ---------- */
+.home img {
+  -webkit-user-drag: none;
+}
+
+/* ---------- Mode photo + fade to base ---------- */
 .home__backdrop {
   position: absolute;
   inset: 0;
 }
 
-.home__course {
+/* One photo per mode, cross-faded and dimmed when the mode changes: the outgoing photo
+   darkens as it fades out, the incoming one fades in dark and brightens up more slowly */
+.home__photo {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   pointer-events: none;
+  opacity: 0;
+  filter: brightness(0.35);
+  transition:
+    opacity 400ms ease-in-out,
+    filter 800ms ease-out;
+}
+
+.home__photo--active {
+  opacity: 1;
+  filter: brightness(1);
+}
+
+.home__photo--play {
+  animation: home-course-in 1000ms ease-in-out both;
+}
+
+@keyframes home-course-in {
+  from { transform: perspective(1000px) rotateX(30deg) scale(1.6); }
+  to   { transform: perspective(1000px) rotateX(0deg) scale(1); }
 }
 
 .home__fade {
@@ -32,60 +60,142 @@
   );
 }
 
-/* ---------- Header scroll-edge blur ---------- */
+/* ---------- Header: scroll-edge blur + action buttons ----------
+ * Stacked above the app-level glow (z-index 1, ModeGlow.css) and the content,
+ * so it's never faded out.
+ */
 .home__header {
   position: absolute;
   top: 0;
+  z-index: 3;
   left: 0;
   right: 0;
-  height: 122px;
-  overflow: hidden;
+  height: 120px;
   pointer-events: none;
 }
 
-.home__header::before {
-  content: '';
-  position: absolute;
-  inset: 0 0 2px;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+@keyframes home-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
-.home__scroll-edge {
+/* ---------- Content (mode body, CTA) ---------- */
+.home__content {
   position: absolute;
-  inset: 0 0 2px;
-  background: #000;
-  opacity: 0.9;
-  mix-blend-mode: screen;
-  backdrop-filter: blur(50px);
-  -webkit-backdrop-filter: blur(50px);
-  mask-size: 100% 100%;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;
+  inset: 0;
+  z-index: 2; /* above the app-level glow */
+  animation: home-fade-in 750ms ease-in-out 500ms both;
 }
 
-/* ---------- Bottom blue glow ---------- */
-.home__glow {
+/* The header ignores pointer events so swipes pass through; its buttons opt back in */
+.home__actions {
+  pointer-events: auto;
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 300px;
-  overflow: hidden;
+  top: 62px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.home__action {
+  position: relative;
+}
+
+/* Status dot at the button's top-right (Figma: New Notification / Device connected dot) */
+.home__action-dot {
+  position: absolute;
+  top: -2px;
+  left: 38px;
   pointer-events: none;
 }
 
-.home__glow-shape {
+/* Play/Train control, filling the header row between the two buttons (Figma: 250px at 402px wide) */
+.home__modes {
+  flex: 1 1 0;
+  min-width: 0;
+  margin: 0 8px;
+}
+
+/* Mode-specific body and CTA: remounted on each mode switch, then faded in from 0 after a short delay */
+.home__mode-body,
+.home__cta {
+  animation: home-fade-in 400ms ease-in-out 500ms both;
+}
+
+.home__course-info {
   position: absolute;
-  left: calc(50% + 0.5px);
-  bottom: -13px;
-  width: 475px;
-  height: 475px;
-  border-radius: 100px;
-  translate: -50% 0;
-  box-shadow:
-    inset 0 -20px 40px -16px rgba(255, 255, 255, 0.4),
-    inset 0 -40px 60px -16px #bfd5fe,
-    inset 0 -120px 120px -60px #0056fa;
+  top: 281px;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.home__session-info {
+  position: absolute;
+  top: 368px;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  text-align: center;
+}
+
+/* Figma: 56px Overlay Button (24px icon, 16px padding) */
+.home__preview-button.button--icon-only {
+  min-height: 0;
+  padding: 16px;
+}
+
+.home__title {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  text-align: center;
+}
+
+.home__conditions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home__condition {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-feature-settings: "lnum" 1, "pnum" 1;
+}
+
+.home__condition img,
+.home__divider img {
+  display: block;
+}
+
+/* Degree mark sits at the top-right of the number, flush against it */
+.home__degree {
+  align-self: flex-start;
+  margin-left: -6px;
+}
+
+/* 28px above the tab bar: its bottom padding (App.css) + 62px bar (TabBar.css) + 28px gap */
+.home__cta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(max(20px, env(safe-area-inset-bottom)) + 62px + 28px);
+  display: flex;
+  justify-content: center;
 }

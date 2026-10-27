@@ -1,0 +1,142 @@
+/*
+ * Button (Figma: "Overlay Button (Dark)", [e] BTG Clubhouse DS)
+ * Label type comes from design-system/typography.css (Small/Bold, Body/Bold) via <Text>.
+ * Glass variant uses the shared Liquid Glass treatment (design-system/glass.css).
+ */
+
+.button {
+  --button-icon-size: 18px;
+  --button-placeholder: url("/icons/button/placeholder-18.svg");
+
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 100px;
+  background: none;
+  color: var(--color-text-default);
+  font: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 120ms ease, opacity 120ms ease;
+}
+
+.button:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--color-text-link);
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ---------- Fill + Shadow layer ---------- */
+.button__fill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 1000px;
+  box-shadow:
+    1.25px 0 0 -0.75px rgba(166, 166, 166, 0.08),
+    -1.25px 0 0 -0.75px rgba(166, 166, 166, 0.08),
+    0 0 0 0.5px rgba(166, 166, 166, 0.08),
+    0 8px 15px 0 rgba(0, 0, 0, 0.04);
+}
+
+.button--blue {
+  color: var(--color-text-on-blue-tees-golf);
+}
+.button--blue .button__fill {
+  background: var(--color-bg-blue-tees-golf);
+}
+
+.button--prominent {
+  color: var(--color-text-inverse);
+}
+/* Figma's Glass Effect layer renders the white fill as a soft light grey */
+.button--prominent .button__fill {
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.17), rgba(0, 0, 0, 0.17)),
+    var(--color-bg-prominent-liquid);
+}
+
+/* Glass uses the shared Liquid Glass treatment (glass.css) with the button's fill and shadow */
+.button--glass {
+  color: var(--color-text-default);
+}
+.button--glass .button__fill {
+  position: absolute;
+  --glass-tint: rgba(153, 153, 153, 0.17);
+  --glass-shadow:
+    1.25px 0 0 -0.75px rgba(166, 166, 166, 0.32),
+    -1.25px 0 0 -0.75px rgba(166, 166, 166, 0.16),
+    0 0 0 0.5px rgba(166, 166, 166, 0.16),
+    0 8px 15px 0 rgba(0, 0, 0, 0.04);
+}
+
+/* ---------- Sizes ---------- */
+.button--medium {
+  padding: 15px 20px;
+}
+
+.button--large {
+  --button-icon-size: 24px;
+  --button-placeholder: url("/icons/button/placeholder-24.svg");
+  gap: 8px;
+  min-height: 64px;
+  padding: 20px 28px;
+}
+
+/* Icon-only: circular */
+.button--icon-only.button--small {
+  padding: 9px;
+}
+.button--icon-only.button--medium {
+  --button-icon-size: 20px;
+  --button-placeholder: url("/icons/button/placeholder-20.svg");
+  padding: 16px;
+}
+.button--icon-only.button--large {
+  padding: 20px;
+}
+
+/* ---------- Content ---------- */
+.button__icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--button-icon-size);
+  height: var(--button-icon-size);
+}
+
+.button__icon > svg,
+.button__icon > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.button__placeholder {
+  display: block;
+  width: var(--button-icon-size);
+  height: var(--button-icon-size);
+  background: currentColor;
+  mask: var(--button-placeholder) center / contain no-repeat;
+}
+
+.button__label {
+  text-align: center;
+  font-feature-settings: "lnum" 1, "pnum" 1;
+}

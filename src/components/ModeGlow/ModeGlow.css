@@ -1,0 +1,152 @@
+/* ---------- Bottom glow (blue in Play, orange in Train) ----------
+ * Rendered once by App, after the page. Its z-index puts it above each page's
+ * un-indexed backdrop (photo, base colour) and below page content, which pages
+ * lift with z-index: 2 (and their headers with 3). Page roots must not create a
+ * stacking context, or their content can't rise above the glow.
+ */
+.mode-glow {
+  --glow-blue-highlight: #bfd5fe;
+  --glow-blue: #0056fa;
+  --glow-orange-highlight: #ffeb69;
+  --glow-orange: #ff5900;
+  --glow-teal-highlight: #bfe0dc;
+  --glow-teal: #008272;
+
+  /* Train glow colours, picked in the secret settings panel (data-train-glow) */
+  --glow-train-highlight: var(--glow-orange-highlight);
+  --glow-train: var(--glow-orange);
+
+  /* How far up the screen the glow reaches: it's faded out between
+     (reach - fade) and reach above the bottom, at rest and during the swell. */
+  --mode-glow-reach: 420px;
+  --mode-glow-fade: 140px;
+
+  /* Length of the mode-switch swell. The rise/settle easing curves are in the keyframes
+     (browsers ignore var() for a keyframe's animation-timing-function). */
+  --mode-glow-swell-duration: 1400ms;
+
+  /* Peak of the mode-switch swell (25% keyframe). Edit these to tune the shape. */
+  --mode-glow-peak-blur: 32px;
+  --mode-glow-peak-to-train:
+    inset -16px -43px 50px -16px rgba(255, 255, 255, 0.4),
+    inset -20px -47px 60px -16px var(--glow-train-highlight),
+    inset -80px -180px 80px -80px var(--glow-train);
+  --mode-glow-peak-to-play:
+    inset 16px -43px 50px -16px rgba(255, 255, 255, 0.4),
+    inset 20px -47px 60px -16px var(--glow-blue-highlight),
+    inset 80px -180px 80px -80px var(--glow-blue);
+
+  --mode-glow-highlight: var(--glow-blue-highlight);
+  --mode-glow-color: var(--glow-blue);
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  height: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to top,
+    #000 calc(var(--mode-glow-reach) - var(--mode-glow-fade)),
+    transparent var(--mode-glow-reach)
+  );
+  pointer-events: none;
+  animation: mode-glow-in 750ms ease-in-out both;
+}
+
+.mode-glow[data-train-glow="teal"] {
+  --glow-train-highlight: var(--glow-teal-highlight);
+  --glow-train: var(--glow-teal);
+}
+
+/* Same glow shape in both modes; only the colours change */
+.mode-glow--train {
+  --mode-glow-highlight: var(--glow-train-highlight);
+  --mode-glow-color: var(--glow-train);
+}
+
+@keyframes mode-glow-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.mode-glow__shape {
+  position: absolute;
+  left: calc(50% + 0.5px);
+  bottom: -13px;
+  width: 475px;
+  height: 475px;
+  border-radius: 100px;
+  translate: -50% 0;
+  box-shadow:
+    inset 0 -20px 40px -16px rgba(255, 255, 255, 0.4),
+    inset 0 -40px 60px -16px var(--mode-glow-highlight),
+    inset 0 -120px 120px -60px var(--mode-glow-color);
+}
+
+/* ---------- Mode-switch animation ----------
+ * Only runs after the first switch (mode-glow--animated), so the page doesn't
+ * animate on load. Each keyframe set starts on the old mode's glow, swells up the
+ * side being swiped towards (right for Train, left for Play: a negative x offset
+ * pushes an inset shadow onto the right edge, positive onto the left), then
+ * settles on the new mode's glow, which has the same shape in a different colour.
+ * Only the shadows move; the shape's size and position stay fixed. Every frame keeps
+ * three shadow layers so the browser can interpolate between them. The brief filter blur hides the hard edge
+ * Chrome leaves where it truncates very large inset-shadow blurs.
+ *
+ * Easing is set per keyframe: animation-timing-function on a keyframe applies to the
+ * segment that starts there, so the rise and the settle each get their own curve.
+ */
+.mode-glow--animated.mode-glow--train .mode-glow__shape {
+  animation: mode-glow-to-train var(--mode-glow-swell-duration) linear;
+}
+.mode-glow--animated.mode-glow--play .mode-glow__shape {
+  animation: mode-glow-to-play var(--mode-glow-swell-duration) linear;
+}
+
+@keyframes mode-glow-to-train {
+  from {
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); /* rise: fast out, quick to peak */
+    filter: blur(0);
+    box-shadow:
+      inset 0 -20px 40px -16px rgba(255, 255, 255, 0.4),
+      inset 0 -40px 60px -16px var(--glow-blue-highlight),
+      inset 0 -120px 120px -60px var(--glow-blue);
+  }
+  25% {
+    animation-timing-function: cubic-bezier(0.45, 0, 0.15, 1); /* settle: lingers, then a long soft landing */
+    filter: blur(var(--mode-glow-peak-blur));
+    box-shadow: var(--mode-glow-peak-to-train);
+  }
+  to {
+    filter: blur(0);
+    box-shadow:
+      inset 0 -20px 40px -16px rgba(255, 255, 255, 0.4),
+      inset 0 -40px 60px -16px var(--glow-train-highlight),
+      inset 0 -120px 120px -60px var(--glow-train);
+  }
+}
+
+@keyframes mode-glow-to-play {
+  from {
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); /* rise: fast out, quick to peak */
+    filter: blur(0);
+    box-shadow:
+      inset 0 -20px 40px -16px rgba(255, 255, 255, 0.4),
+      inset 0 -40px 60px -16px var(--glow-train-highlight),
+      inset 0 -120px 120px -60px var(--glow-train);
+  }
+  25% {
+    animation-timing-function: cubic-bezier(0.45, 0, 0.15, 1); /* settle: lingers, then a long soft landing */
+    filter: blur(var(--mode-glow-peak-blur));
+    box-shadow: var(--mode-glow-peak-to-play);
+  }
+  to {
+    filter: blur(0);
+    box-shadow:
+      inset 0 -20px 40px -16px rgba(255, 255, 255, 0.4),
+      inset 0 -40px 60px -16px var(--glow-blue-highlight),
+      inset 0 -120px 120px -60px var(--glow-blue);
+  }
+}

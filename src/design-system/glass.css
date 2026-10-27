@@ -1,0 +1,76 @@
+/*
+ * BTG Clubhouse DS: Liquid Glass
+ * CSS approximation of Figma's Glass effect + the "Fill + Shadow" / "Glass Effect"
+ * layers used on glass components (tab bar, toolbars, sheets, buttons).
+ *
+ * Usage: add `ds-glass` to any element with a border-radius.
+ *   <div class="ds-glass" style="border-radius: 999px">…</div>
+ *
+ * How Figma's parameters map (see the Liquid Glass tokens below):
+ *   Frost       -> backdrop blur
+ *   Light angle -> direction of the specular rim (0 = lit from the top)
+ *   Depth       -> size of the inner edge glow
+ *   Fill layers -> tint (Figma uses luminosity/lighten blends; CSS approximates
+ *                  them with a darkened, re-saturated backdrop under a translucent tint)
+ *   Refraction, Dispersion, Splay -> not reproducible in CSS across browsers;
+ *                  their visible result (lit edges) is folded into the rim + glow.
+ *
+ * Tune per instance by overriding the --glass-* properties on the element.
+ */
+
+:root {
+  /* Figma: Liquid Glass variables */
+  --glass-frost: 16px;           /* Liquid Glass/Frost - Medium */
+  --glass-light-angle: 0deg;     /* Liquid Glass/Light Angle */
+  --glass-depth: 30px;           /* Liquid Glass/Depth - Medium and Large */
+
+  /* Dark glass fill (Figma: Fill + Shadow, #1a1a1a luminosity/lighten stack) */
+  --glass-tint: rgba(30, 30, 38, 0.5);
+  --glass-backdrop: brightness(0.6) saturate(1.8);
+
+  /* Specular rim, strongest on the lit side (Figma render: #46474f top, #26262f bottom on #1a1a23) */
+  --glass-rim-lit: rgba(255, 255, 255, 0.2);
+  --glass-rim-unlit: rgba(255, 255, 255, 0.09);
+  --glass-rim-width: 1px;
+
+  /* Inner glow along the lit and unlit edges */
+  --glass-glow-lit: rgba(255, 255, 255, 0.025);
+  --glass-glow-unlit: rgba(255, 255, 255, 0.06);
+
+  --glass-shadow: 0 8px 48px 0 rgba(0, 0, 0, 0.45);
+}
+
+.ds-glass {
+  position: relative;
+  background: var(--glass-tint);
+  -webkit-backdrop-filter: blur(var(--glass-frost)) var(--glass-backdrop);
+  backdrop-filter: blur(var(--glass-frost)) var(--glass-backdrop);
+  box-shadow:
+    var(--glass-shadow),
+    inset 0 2px 6px 0 var(--glass-glow-lit),
+    inset 0 calc(var(--glass-depth) * -0.4) calc(var(--glass-depth) * 0.4) calc(var(--glass-depth) * -0.2) var(--glass-glow-unlit);
+}
+
+/* Specular rim: a gradient border drawn by masking out the padding box */
+.ds-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: var(--glass-rim-width);
+  border-radius: inherit;
+  background: linear-gradient(
+    calc(180deg + var(--glass-light-angle)),
+    var(--glass-rim-lit) 0%,
+    transparent 35%,
+    transparent 65%,
+    var(--glass-rim-unlit) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  pointer-events: none;
+}

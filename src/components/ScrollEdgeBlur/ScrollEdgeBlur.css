@@ -1,0 +1,33 @@
+/*
+ * Each blur layer blurs what's beneath it (including earlier layers), so the blur
+ * compounds towards the edge and tapers smoothly to nothing away from it.
+ * Scale the overall strength with --scroll-edge-blur-scale.
+ */
+.scroll-edge-blur {
+  --scroll-edge-blur-scale: 1;
+
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.scroll-edge-blur__layer {
+  --direction: to bottom;
+
+  position: absolute;
+  inset: 0;
+  /* Unprefixed only: the build adds -webkit- for Safari. Writing both makes the
+     minifier keep just the prefixed one, which Chrome ignores. */
+  backdrop-filter: blur(calc(var(--blur) * var(--scroll-edge-blur-scale)));
+  mask-image: linear-gradient(var(--direction), #000 var(--solid), transparent var(--clear));
+}
+
+.scroll-edge-blur--bottom .scroll-edge-blur__layer {
+  --direction: to top;
+}
+
+.scroll-edge-blur__layer:nth-child(1) { --blur: 1px;  --solid: 70%; --clear: 100%; }
+.scroll-edge-blur__layer:nth-child(2) { --blur: 2px;  --solid: 50%; --clear: 85%; }
+.scroll-edge-blur__layer:nth-child(3) { --blur: 4px;  --solid: 35%; --clear: 70%; }
+.scroll-edge-blur__layer:nth-child(4) { --blur: 8px;  --solid: 20%; --clear: 55%; }
+.scroll-edge-blur__layer:nth-child(5) { --blur: 16px; --solid: 5%;  --clear: 40%; }

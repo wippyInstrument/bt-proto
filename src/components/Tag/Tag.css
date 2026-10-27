@@ -1,0 +1,21 @@
+/*
+ * Tag (Figma: "Tag", [e] BTG Clubhouse DS)
+ * Label type comes from design-system/typography.css (Caption/2) via <Text>.
+ */
+
+.tag {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 6.5px 10px 5.5px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.tag--default  { background: var(--color-bg-inverse); }
+.tag--subtle   { background: var(--color-bg-inverse-secondary); }
+.tag--danger   { background: var(--color-bg-danger); }
+.tag--positive { background: var(--color-bg-positive); }
+.tag--warning  { background: var(--color-bg-warning); }
+.tag--inverse  { background: var(--color-bg-base); }

@@ -117,6 +117,28 @@
   --color-text-on-scout-ai: #00050f;
 }
 
+/* ---------- Background colors (Figma: Semantic/Background, Semantic/_Component) ---------- */
+:root {
+  --color-bg-base: #00050f;
+  --color-bg-inverse: #ffffff;
+  --color-bg-inverse-secondary: rgba(41, 46, 62, 0.5);
+  --color-bg-danger: #f70000;
+  --color-bg-positive: #35d200;
+  --color-bg-warning: #ffa100;
+  --color-bg-blue-tees-golf: #0056fa;
+  --color-bg-prominent-liquid: #ffffff;
+  /* Semantic/Background/Overlay - Default. Figma's value didn't come through (fallback #00050f
+     is opaque, but the design shows the page through it); alpha chosen to match the render. */
+  --color-bg-overlay: rgba(0, 5, 15, 0.6);
+}
+
+/* ---------- Border colors (Figma: Semantic/Border) ---------- */
+:root {
+  --color-border-default: rgba(83, 88, 107, 0.5);
+  --color-border-strong: #ffffff;
+  --color-border-container: rgba(41, 46, 62, 0.5);
+}
+
 /* ---------- Text & icon colors: Light ---------- */
 [data-theme="light"] {
   color-scheme: light;

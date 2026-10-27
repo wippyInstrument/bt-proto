@@ -1,0 +1,14 @@
+.app__tab-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  padding-bottom: max(20px, env(safe-area-inset-bottom));
+  animation: app-tab-bar-in 750ms ease-in-out both;
+}
+
+@keyframes app-tab-bar-in {
+  from { transform: translateY(30px); }
+  to   { transform: translateY(0); }
+}
