@@ -1,0 +1,91 @@
+.home {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--background-base);
+}
+
+/* ---------- Course image + fade to base ---------- */
+.home__backdrop {
+  position: absolute;
+  inset: 0;
+}
+
+.home__course {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.home__fade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 5, 15, 0) 0%,
+    rgba(0, 5, 15, 0.75) 50%,
+    var(--background-base) 100%
+  );
+}
+
+/* ---------- Header scroll-edge blur ---------- */
+.home__header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 122px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.home__header::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 2px;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.home__scroll-edge {
+  position: absolute;
+  inset: 0 0 2px;
+  background: #000;
+  opacity: 0.9;
+  mix-blend-mode: screen;
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+}
+
+/* ---------- Bottom blue glow ---------- */
+.home__glow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 300px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.home__glow-shape {
+  position: absolute;
+  left: calc(50% + 0.5px);
+  bottom: -13px;
+  width: 475px;
+  height: 475px;
+  border-radius: 100px;
+  translate: -50% 0;
+  box-shadow:
+    inset 0 -20px 40px -16px rgba(255, 255, 255, 0.4),
+    inset 0 -40px 60px -16px #bfd5fe,
+    inset 0 -120px 120px -60px #0056fa;
+}

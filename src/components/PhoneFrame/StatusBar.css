@@ -1,0 +1,37 @@
+.status-bar {
+  display: flex;
+  gap: 154px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 21px 24px 19px;
+  pointer-events: none;
+}
+
+.status-bar__time,
+.status-bar__levels {
+  display: flex;
+  flex: 1 0 0;
+  align-items: center;
+  justify-content: center;
+  height: 22px;
+}
+
+.status-bar__time {
+  padding-top: 1.5px;
+  font-family: -apple-system, 'SF Pro Text', system-ui, sans-serif;
+  font-size: 17px;
+  font-weight: 590;
+  line-height: 22px;
+  color: #fff;
+}
+
+.status-bar__levels {
+  gap: 7px;
+  padding: 1px 1px 0 0;
+}
+
+.status-bar__levels img {
+  display: block;
+  flex-shrink: 0;
+}

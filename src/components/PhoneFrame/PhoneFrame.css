@@ -1,0 +1,56 @@
+/* Phone (default): no frame, the app fills the viewport. */
+.phone-frame,
+.phone-frame__device,
+.phone-frame__screen {
+  height: 100%;
+}
+
+.phone-frame__screen {
+  position: relative;
+  overflow: hidden;
+}
+
+.phone-frame__status-bar {
+  display: none;
+}
+
+/* Desktop (wide viewport + mouse/trackpad): centre the app inside an iPhone 16 Pro sized frame (402×874). */
+@media (min-width: 500px) and (hover: hover) and (pointer: fine) {
+  .phone-frame {
+    display: grid;
+    place-items: center;
+    min-height: 100%;
+    padding: 24px;
+    background: #1a1d24;
+  }
+
+  .phone-frame__device {
+    --phone-radius: 64px;
+    --bezel: 12px;
+
+    position: relative;
+    width: calc(402px + var(--bezel) * 2);
+    height: min(calc(874px + var(--bezel) * 2), calc(100svh - 48px));
+    padding: var(--bezel);
+    border-radius: calc(var(--phone-radius) + var(--bezel));
+    background: #0b0b0d;
+    box-shadow:
+      0 0 0 1px #3a3d45,
+      0 30px 80px rgba(0, 0, 0, 0.5);
+  }
+
+  .phone-frame__screen {
+    border-radius: var(--phone-radius);
+    /* Keep the screen as the containing block so the status bar overlays it. */
+    transform: translateZ(0);
+  }
+
+  .phone-frame__status-bar {
+    display: flex;
+    position: absolute;
+    top: var(--bezel);
+    left: var(--bezel);
+    right: var(--bezel);
+    z-index: 10;
+  }
+}
